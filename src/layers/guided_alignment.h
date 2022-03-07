@@ -49,8 +49,8 @@ static inline RationalLoss guidedAlignmentCost(Ptr<ExpressionGraph> graph,
 
   auto [indices, values]  = guidedAlignmentToSparse(batch);
   auto alignmentIndices   = graph->indices(indices);
-  auto alignmentValues    = graph->constant({(int)values.size()}, inits::fromVector(values));
-  auto attentionAtAligned = cols(flatten(attention), alignmentIndices);
+  auto alignmentValues    = graph->constant({(int)values.size()}, inits::fromVector(values), Type::float32);
+  auto attentionAtAligned = cast(cols(flatten(attention), alignmentIndices), Type::float32);
 
   float epsilon           = 1e-6f;
   Expr alignmentLoss      = -sum(alignmentValues * log(attentionAtAligned + epsilon));
